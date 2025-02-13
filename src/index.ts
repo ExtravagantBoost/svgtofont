@@ -277,6 +277,8 @@ export default async (options: SvgToFontOptions = {}) => {
     let cssIconHtml: string[] = [];
     let unicodeHtml: string[] = [];
     let symbolHtml: string[] = [];
+    /*this option should only be used if svg has size included in name*/
+    const preserveSvgSize = (options.css && typeof(options.css) == "object"? options.css.preserveSvgSize : false);
     const prefix = options.classNamePrefix || options.fontName;
     const infoData: InfoData = {}
 
@@ -299,7 +301,8 @@ export default async (options: SvgToFontOptions = {}) => {
           cssString.push(`.${symbolName}:before { content: var(--${symbolName}); }\n`);
           if (index === self.length - 1) cssRootVars.push(`}\n`)
         } else {
-          cssString.push(`.${symbolName}:before { content: "\\${encodedCodes.toString(16)}"; }\n`);
+          
+          cssString.push(`.${symbolName}:before { content: "\\${encodedCodes.toString(16)}";${PreservedSize} }\n`);
         }
       }
       infoData[name].encodedCode = `\\${encodedCodes.toString(16)}`;
