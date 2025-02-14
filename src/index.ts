@@ -278,31 +278,42 @@ export default async (options: SvgToFontOptions = {}) => {
     let unicodeHtml: string[] = [];
     let symbolHtml: string[] = [];
     /*this option should only be used if svg has size included in name*/
-    const preserveSvgSize = (options.css && typeof(options.css) == "object"? options.css.preserveSvgSize : false);
+    const preserveSvgSize = (options.css && typeof(options.css) == "object"? options.css.preserveSVGsize : false);
     const prefix = options.classNamePrefix || options.fontName;
     const infoData: InfoData = {}
-
     Object.keys(unicodeObject).forEach((name, index, self) => {
       if (!infoData[name]) infoData[name] = {};
       const _code = unicodeObject[name];
       let symbolName = options.classNamePrefix + options.symbolNameDelimiter + name
       let iconPart = symbolName + '">';
       let encodedCodes: string | number = _code.charCodeAt(0);
-
+      let cssClasses = [];
+      
+      let PreservedSize = "";
+      if (preserveSvgSize) {
+        const svg = fs.readFileSync(path.resolve(options.src, name + ".svg")).toString();
+        const viewBox = svg.match(/viewBox="([^"]+)"/);
+        if (viewBox && viewBox[1]) {
+          const size = viewBox[1].split(' ');
+          cssClasses.push(`width: ${size[2]}px`);
+          cssClasses.push(`height: ${size[3]}px`);
+        }
+      }
       if (options.useNameAsUnicode) {
         symbolName = name;
         iconPart = prefix + '">' + name;
         encodedCodes = _code.split('').map(x => x.charCodeAt(0)).join(';&amp;#');
       } else {
+        PreservedSize = cssClasses.join('; ') + "; ";
         cssToVars.push(`$${symbolName}: "\\${encodedCodes.toString(16)}";\n`);
         if (options.useCSSVars) {
           if (index === 0) cssRootVars.push(`:root {\n`)
           cssRootVars.push(`--${symbolName}: "\\${encodedCodes.toString(16)}";\n`);
-          cssString.push(`.${symbolName}:before { content: var(--${symbolName}); }\n`);
+          cssString.push(`.${symbolName}:before { content: var(--${symbolName}); ${PreservedSize}}\n`);
           if (index === self.length - 1) cssRootVars.push(`}\n`)
         } else {
           
-          cssString.push(`.${symbolName}:before { content: "\\${encodedCodes.toString(16)}";${PreservedSize} }\n`);
+          cssString.push(`.${symbolName}:before { content: "\\${encodedCodes.toString(16)}"; ${PreservedSize}}\n`);
         }
       }
       infoData[name].encodedCode = `\\${encodedCodes.toString(16)}`;

@@ -18,7 +18,10 @@ svgtofont({
   dist: path.resolve(rootPath, "dist"), // output path
   // emptyDist: true, // Clear output directory contents
   fontName: "svgtofont", // font name
-  css: true, // Create CSS files.
+  css: {
+    preserveSVGsize: true,
+    // template: path.resolve(rootPath, "template.hbs")
+  }, // Create CSS files.
   outSVGReact: true,
   outSVGReactNative: true,
   outSVGPath: true,

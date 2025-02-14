@@ -280,6 +280,10 @@ export type CSSOptions = {
    */
   fileName?: string;
   /**
+   * this option should only be used when Svg has size included in the filename
+   */
+  preserveSVGsize?: boolean;
+  /**
    * Ad hoc template variables.
    */
   templateVars?: Record<string, any>;

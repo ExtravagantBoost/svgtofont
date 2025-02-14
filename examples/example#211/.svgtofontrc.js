@@ -5,6 +5,7 @@ import path from "path";
 export default {
   fontName: "iconfont",
   css: {
-    hasTimestamp: "v1.2.3"
+    hasTimestamp: "v1.2.3",
+    preserveSVGsize: true
   }
 }

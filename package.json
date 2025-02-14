@@ -41,7 +41,8 @@
   },
   "svgtofont": {
     "css": {
-      "fontSize": false
+      "fontSize": false,
+      "preserveSVGsize": true
     }
   },
   "keywords": [
@@ -101,7 +102,7 @@
     "@types/svg2ttf": "~5.0.1",
     "@types/ttf2eot": "~2.0.0",
     "@types/ttf2woff": "~2.0.2",
-    "tsbb": "^4.4.0"
+    "tsbb": "^4.4.1"
   },
   "peerDependencies": {
     "@types/svg2ttf": "~5.0.1"
